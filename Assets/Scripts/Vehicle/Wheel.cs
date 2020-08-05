@@ -4,30 +4,37 @@ using UnityEngine;
 
 public class Wheel : MonoBehaviour
 {
-    private WheelCollider m_wheel;
+    public bool m_isMotor;
+    public bool m_IsSteering;
 
-    void Start()
+    public WheelCollider m_wheel;
+    /*{
+        get { return m_wheel; }
+        private set { m_wheel = value; }
+    }*/
+
+    void Awake()
     {
         m_wheel = GetComponentInParent<WheelCollider>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         RotateWheelVisually();
-
-        Vector3 position;
-        Quaternion rotation;
-        m_wheel.GetWorldPose(out position, out rotation);
-
-        Debug.Log(gameObject.name + ": " + (rotation == transform.rotation));
     }
 
     public void RotateWheelVisually()
     {
-        Vector3 position;
-        Quaternion rotation;
-        m_wheel.GetWorldPose(out position, out rotation);
-        //transform.position = position;
-        transform.rotation = rotation;
+        Vector3 pos = transform.position;
+        Quaternion rot = transform.rotation;
+        m_wheel.GetWorldPose(out pos, out rot);
+        rot = rot * Quaternion.Euler(new Vector3(0, 0, 90));
+        transform.position = pos;
+        transform.rotation = rot;
+    }
+
+    public void Drift()
+    {
+
     }
 }
