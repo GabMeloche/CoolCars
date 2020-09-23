@@ -7,7 +7,7 @@ public class Wheel : MonoBehaviour
     public bool m_isMotor;
     public bool m_IsSteering;
 
-    public WheelCollider m_wheel;
+    public WheelCollider m_wheel { get; set; }
     /*{
         get { return m_wheel; }
         private set { m_wheel = value; }
