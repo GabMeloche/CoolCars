@@ -9,15 +9,17 @@ public class VehicleController : MonoBehaviour
     public bool m_automaticGearbox = true;
     public float m_forwardTorque = 1000f;
     public float m_reverseTorque = 500f;
+    public float m_brakeTorque = 1000f;
     public float m_steeringSpeed = 0.05f;
     public float m_maxSteerAngle = 60f;
     public float m_totalGears = 5;
-    public float m_speed { get; set; } = 0;
+    public int m_maxRPM = 8500;
+    public int m_minRPM = 1500;
     public int m_currentGear { get; set; } = 1;
     public int m_currentRPM { get; set; } = 1500;
+    public float m_speed { get; set; } = 0;
 
     private bool m_reversing = false;
-    private int m_maxRPM = 8500;
     private float[] m_maxSpeeds = new float[]
     {
         5f,
@@ -30,11 +32,12 @@ public class VehicleController : MonoBehaviour
     private Rigidbody m_rigidbody;
     private List<WheelCollider> m_motorWheels = new List<WheelCollider>();
     private List<WheelCollider> m_steeringWheels = new List<WheelCollider>();
+    private WheelCollider[] m_allWheelColliders;
 
     void Start()
     {
-        Wheel[] AllWheels;
-        AllWheels = GetComponentsInChildren<Wheel>();
+        m_allWheelColliders = GetComponentsInChildren<WheelCollider>();
+        Wheel[] AllWheels = GetComponentsInChildren<Wheel>();
 
         m_rigidbody = GetComponent<Rigidbody>();
 
@@ -51,7 +54,7 @@ public class VehicleController : MonoBehaviour
     void Update()
     {
         m_currentRPM = (int)(m_maxRPM * m_speed / m_maxSpeeds[m_currentGear - 1]);
-        m_currentRPM = Mathf.Clamp(m_currentRPM, 1500, m_maxRPM);
+        m_currentRPM = Mathf.Clamp(m_currentRPM, m_minRPM, m_maxRPM);
         m_speed = transform.InverseTransformDirection(m_rigidbody.velocity).z;
 
         if (m_speed > m_maxSpeeds[m_currentGear - 1] && m_currentGear < m_totalGears)
@@ -63,6 +66,7 @@ public class VehicleController : MonoBehaviour
     void FixedUpdate()
     {
         Accelerate(Input.GetKey(KeyCode.W));
+        Brake(Input.GetKey(KeyCode.S));
         Steer(Input.GetAxis("Horizontal"));
     }
 
@@ -86,7 +90,7 @@ public class VehicleController : MonoBehaviour
         {
             if (Mathf.Approximately(p_direction, 0f))
                 wheel.steerAngle = Mathf.Lerp(0f, wheel.steerAngle, Time.deltaTime * m_steeringSpeed);
-            else if(p_direction < 0)
+            else if(p_direction < 0f)
                 wheel.steerAngle = Mathf.Lerp(-m_maxSteerAngle, 0f, Time.deltaTime * m_steeringSpeed);
             else
                 wheel.steerAngle = Mathf.Lerp(m_maxSteerAngle, 0f, Time.deltaTime * m_steeringSpeed);          
@@ -94,29 +98,14 @@ public class VehicleController : MonoBehaviour
 
     }
 
-    private void Reverse(bool p_shouldReverse)
+    public void Brake(bool p_shouldBrake)
     {
-        if (!p_shouldReverse)
-            return;
-
-        if (Mathf.Approximately(m_rigidbody.velocity.magnitude, 0f))
+        foreach (WheelCollider wheel in m_allWheelColliders)
         {
-
+            if (p_shouldBrake)
+                wheel.brakeTorque = m_brakeTorque;
+            else
+                wheel.brakeTorque = 0f;
         }
     }
-
-    private void SwitchGears()
-    {
-
-    }
-    /*private void BrakeOrReverse(bool p_keyPressed)
-    {
-        if (!p_keyPressed)
-            return;
-
-        if (Mathf.Approximately(m_rigidbody.velocity.magnitude, 0f))
-        {
-            m_reversing = !m_reversing;
-        }
-    }*/
 }
