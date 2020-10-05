@@ -490,6 +490,7 @@ GameObject:
   m_Component:
   - component: {fileID: 170743274}
   - component: {fileID: 170743276}
+  - component: {fileID: 170743278}
   - component: {fileID: 170743275}
   m_Layer: 0
   m_Name: Car
@@ -545,12 +546,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_automaticGearbox: 1
-  m_forwardTorque: 1000
-  m_reverseTorque: 500
+  m_forwardTorqueMultiplier: 0.25
   m_brakeTorque: 1000
+  m_reverseTorque: 500
   m_steeringSpeed: 0.05
   m_maxSteerAngle: 50
   m_totalGears: 5
+  m_maxRPM: 8500
+  m_minRPM: 1500
+  m_maxSpeeds:
+  - 5
+  - 10
+  - 15
+  - 20
+  - 25
+--- !u!114 &170743278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170743273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3668ac5008905144bb54707d092b8cff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_idleClip: {fileID: 8300000, guid: c502041826854664683f9914f63427b0, type: 3}
+  m_lowRPMClip: {fileID: 8300000, guid: bb683044c23cd50438d45fe475089c84, type: 3}
+  m_highRPMClip: {fileID: 8300000, guid: 132c1515ea005404fb6144c976c99ed6, type: 3}
 --- !u!1 &200778418
 GameObject:
   m_ObjectHideFlags: 0
