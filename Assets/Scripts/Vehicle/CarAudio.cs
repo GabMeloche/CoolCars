@@ -21,7 +21,6 @@ public class CarAudio : MonoBehaviour
         m_lowRPM = gameObject.AddComponent<AudioSource>();
         m_highRPM = gameObject.AddComponent<AudioSource>();
 
-
         m_idle.clip = m_idleClip;
         m_lowRPM.clip = m_lowRPMClip;
         m_highRPM.clip = m_highRPMClip;
